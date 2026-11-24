@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>บ่อจระเข้ลูกป๋าแจมหลังบริษัท</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: linear-gradient(180deg, #090d16 0%, #132238 42%, #093326 65%, #042219 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .app-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px 24px;
+      overflow: hidden;
+    }
+    /* พระจันทร์และดวงดาว */
+    .moon {
+      position: absolute;
+      top: 68px;
+      right: 26px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fef9c3, #fde047 70%, #eab308);
+      box-shadow: 0 0 36px rgba(253, 224, 71, 0.5);
+      z-index: 1;
+    }
+    .stars {
+      position: absolute;
+      inset: 0 0 55% 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 25px 35px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 95px 85px, #fef08a, transparent),
+        radial-gradient(2px 2px at 165px 45px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 245px 115px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 315px 65px, #bae6fd, transparent),
+        radial-gradient(2px 2px at 65px 165px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 285px 185px, #fff, transparent);
+      opacity: 0.85;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* โคมลอยบนท้องฟ้า */
+    .lantern-layer {
+      position: absolute;
+      inset: 0 0 42% 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .sky-lantern {
+      position: absolute;
+      bottom: -30px;
+      width: 18px;
+      height: 24px;
+      background: radial-gradient(circle at 50% 65%, #fef08a, #f97316 75%, #c2410c);
+      border-radius: 6px 6px 3px 3px;
+      box-shadow: 0 0 14px rgba(251, 146, 60, 0.85);
+      opacity: 0.9;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0) scale(0.9); opacity: 0; }
+      15% { opacity: 0.95; }
+      50% { transform: translateY(-140px) translateX(12px) scale(0.8); }
+      100% { transform: translateY(-310px) translateX(-8px) scale(0.55); opacity: 0; }
+    }
+
+    /* แถบด้านบน */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .title-group { display: flex; align-items: center; gap: 10px; }
+    .croc-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .sub-title { font-size: 11px; color: #cbd5e1; line-height: 1.3; }
+    .main-title { font-size: 19px; font-weight: 800; color: #facc15; margin-top: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+    .top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .pill-btn {
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(30, 41, 59, 0.85);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .pill-btn.fire { background: linear-gradient(135deg, #581c87, #7e22ce); border-color: rgba(216, 180, 254, 0.4); }
+    .pill-btn:active { transform: scale(0.95); }
+
+    /* แบนเนอร์แจ้งเตือนสีเขียวมินต์ */
+    .banner {
+      position: relative;
+      z-index: 10;
+      margin: 14px auto 0;
+      background: #10b981;
+      color: #042f2e;
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.4;
+      padding: 12px 18px;
+      border-radius: 24px;
+      max-width: 315px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    /* พื้นที่ตึกและบ่อน้ำ */
+    .scene {
+      position: relative;
+      flex: 1;
+      min-height: 450px;
+      margin-top: 12px;
+      z-index: 5;
+    }
+    .hq-building {
+      position: absolute;
+      top: 66px;
+      left: 0;
+      width: 118px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 8px;
+      z-index: 6;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+      cursor: pointer;
+    }
+    .hq-name {
+      font-size: 10px;
+      font-weight: 800;
+      text-align: center;
+      color: #e2e8f0;
+      background: #1e293b;
+      padding: 4px;
+      border-radius: 5px;
+      margin-bottom: 6px;
+    }
+    .windows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .win { height: 9px; border-radius: 2px; background: #334155; }
+    .win.y { background: #fde047; }
+    .win.b { background: #38bdf8; }
+    .win.p { background: #c084fc; }
+
+    .warn-board {
+      position: absolute;
+      top: 118px;
+      left: 52%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      background: #eab308;
+      color: #1e293b;
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1.3;
+      padding: 7px 12px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      z-index: 7;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .warn-pole {
+      position: absolute;
+      top: 156px;
+      left: 52%;
+      width: 6px;
+      height: 24px;
+      background: #475569;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
+
+    /* บ่อน้ำและคลื่นน้ำ */
+    .water {
+      position: absolute;
+      left: -16px;
+      right: -16px;
+      top: 172px;
+      bottom: -24px;
+      background: linear-gradient(180deg, #064e3b 0%, #053b2c 45%, #02241b 100%);
+      border-top: 2px solid rgba(52, 211, 153, 0.3);
+      overflow: hidden;
+    }
+    .water-ripple {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        rgba(255, 255, 255, 0.03) 2px,
+        transparent 2px,
+        transparent 24px
+      );
+      animation: waterFlow 4s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes waterFlow {
+      from { background-position: 0 0; }
+      to { background-position: 0 24px; }
+    }
+
+    /* จระเข้ในบ่อ */
+    .croc-swimmer {
+      position: absolute;
+      font-size: 26px;
+      cursor: pointer;
+      z-index: 6;
+      animation: swim 5s ease-in-out infinite alternate;
+    }
+    @keyframes swim {
+      from { transform: translateX(0px) translateY(0px); }
+      to { transform: translateX(22px) translateY(-4px); }
+    }
+
+    /* กระทงลอยเคลื่อนไหวบนน้ำ */
+    .krathong-node {
+      position: absolute;
+      text-align: center;
+      cursor: pointer;
+      z-index: 8;
+      animation: driftWater 14s ease-in-out infinite alternate, bobbing 2.8s ease-in-out infinite;
+    }
+    @keyframes driftWater {
+      0% { transform: translateX(-65%); }
+      100% { transform: translateX(-35%); }
+    }
+    @keyframes bobbing {
+      0%, 100% { margin-bottom: 0px; }
+      50% { margin-bottom: 7px; }
+    }
+    .k-emoji { font-size: 46px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.55)); }
+    .k-label {
+      margin-top: 2px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(255,255,255,0.24);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+    }
+
+    /* ปุ่มหลักด้านล่าง */
+    .bottom-cta {
+      position: relative;
+      z-index: 15;
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .launch-btn {
+      width: 82%;
+      max-width: 310px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f59e0b, #ea580c);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
+    }
+    .launch-btn:active { transform: scale(0.96); }
+
+    /* หน้าต่าง Modal */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.8);
+      z-index: 50;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+    }
+    .modal-bg.open { display: flex; }
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      max-height: 86dvh;
+      overflow-y: auto;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 22px;
+      padding: 18px;
+      color: #fff;
+    }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .modal-head h3 { margin: 0; font-size: 17px; color: #facc15; }
+    .close-x { background: #1e293b; border: none; color: #cbd5e1; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; }
+    label { display: block; font-size: 12px; color: #cbd5e1; margin-top: 10px; font-weight: 600; }
+    input, textarea {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #fff;
+      font-size: 14px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chip {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .krathong-choices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
+    .k-choice {
+      background: #1e293b;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 26px;
+      cursor: pointer;
+    }
+    .k-choice.active { border-color: #facc15; background: #27354f; }
+    .primary-submit {
+      margin-top: 16px;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #10b981, #059669);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    /* พลุและข้อความเด้ง */
+    .firework-particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 90;
+      animation: boom 1s ease-out forwards;
+    }
+    @keyframes boom {
+      0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+    }
+    .toast {
+      position: fixed;
+      top: 16%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #facc15;
+      color: #fef08a;
+      padding: 10px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 99;
+      text-align: center;
+      max-width: 85%;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrap">
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <div class="lantern-layer" id="lanternLayer"></div>
+
+    <div class="top-bar">
+      <div class="title-group">
+        <div class="croc-avatar" id="pondAnimalIcon">🐊</div>
+        <div>
+          <div class="sub-title" id="uiSubTitle">บ่อจระเข้ลูกป๋าแจมหลังบริษัท • คนเพี้ยนรวมตัว</div>
+          <div class="main-title" id="uiMainTitle">บริษัท บะจั๊ยบะโจ้ย จำกัด</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button type="button" class="pill-btn fire" id="btnFirework">🎆 จุดพลุ</button>
+        <button type="button" class="pill-btn" id="btnOpenSettings">⚙️ <span id="krathongCount">1</span></button>
+      </div>
+    </div>
+
+    <div class="banner" id="uiBanner">
+      คุณฮัดชิ่วปะป๊าน้องมีตัง ลอยกระทงลงบ่อลูกป๋าแจมแล้ว! 🐊✨
+    </div>
+
+    <div class="scene">
+      <div class="hq-building" id="btnHq">
+        <div class="hq-name" id="uiHqName">บะจั๊ยบะโจ้ย HQ</div>
+        <div class="windows">
+          <div class="win y"></div><div class="win"></div><div class="win b"></div>
+          <div class="win"></div><div class="win y"></div><div class="win p"></div>
+          <div class="win y"></div><div class="win"></div><div class="win y"></div>
+        </div>
+      </div>
+
+      <div class="warn-board" id="uiWarnSign">
+        ! ระวัง! บ่อจระเข้ลูกป๋าแจม (ห้ามโยนงานลงบ่อ)
+      </div>
+      <div class="warn-pole"></div>
+
+      <div class="water" id="waterArea">
+        <div class="water-ripple"></div>
+        <div class="croc-swimmer" id="croc1" style="top: 34px; left: 26%;">🐊</div>
+        <div class="croc-swimmer" id="croc2" style="bottom: 34px; right: 16%; animation-delay: 1.5s;">🐊</div>
+        <div id="krathongLayer"></div>
+      </div>
+    </div>
+
+    <div class="bottom-cta">
+      <button type="button" class="launch-btn" id="btnOpenFloat">✨ ลอยกระทงเลย!</button>
+    </div>
+  </div>
+
+  <!-- หน้าต่างกรอกชื่อและลอยกระทง -->
+  <div class="modal-bg" id="floatModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>🪷 ใส่ชื่อและฉายาก่อนลอย</h3>
+        <button type="button" class="close-x" id="btnCloseFloat">✕</button>
+      </div>
+
+      <label>เลือกแบบกระทง</label>
+      <div class="krathong-choices" id="kChoices">
+        <div class="k-choice active" data-icon="🪷">🪷</div>
+        <div class="k-choice" data-icon="🎂">🎂</div>
+        <div class="k-choice" data-icon="🐢">🐢</div>
+        <div class="k-choice" data-icon="🥥">🥥</div>
+      </div>
+
+      <label>ชื่อของคุณหรือเพื่อน</label>
+      <input id="inPlayerName" type="text" placeholder="พิมพ์ชื่อตัวเองหรือเพื่อน..." />
+
+      <label>ฉายาประจำตัว (พิมพ์เองหรือจิ้มเลือกด้านล่าง)</label>
+      <input id="inPlayerTag" type="text" placeholder="เช่น หน่วยโดนเทผู้เชี่ยวชาญ" />
+      <div class="chips" id="tagChips"></div>
+
+      <label>คำอธิษฐาน / สิ่งที่อยากทิ้งลงบ่อ</label>
+      <textarea id="inWish" rows="2" placeholder="ขอให้งานไม่เข้า เงินเดือนขึ้น สาธุ!"></textarea>
+
+      <button type="button" class="primary-submit" id="btnSubmitKrathong">🚀 ปล่อยกระทงลงบ่อเลย!</button>
+    </div>
+  </div>
+
+  <!-- หน้าต่างตั้งค่าข้อมูลบ่อเอง -->
+  <div class="modal-bg" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>⚙️ ตั้งค่าข้อมูลบ่อเอง</h3>
+        <button type="button" class="close-x" id="btnCloseSettings">✕</button>
+      </div>
+
+      <label>ชื่อบริษัท / ชื่อบ่อหลัก</label>
+      <input id="cfgMainTitle" type="text" />
+
+      <label>คำโปรยด้านบน</label>
+      <input id="cfgSubTitle" type="text" />
+
+      <label>ชื่อป้ายตึก</label>
+      <input id="cfgHqName" type="text" />
+
+      <label>ข้อความป้ายเตือนสีเหลือง</label>
+      <input id="cfgWarnSign" type="text" />
+
+      <label>สัตว์ในบ่อ (อีโมจิ)</label>
+      <input id="cfgAnimal" type="text" maxlength="4" />
+
+      <label>รายการฉายาแนะนำ (คั่นด้วยเครื่องหมายจุลภาค , )</label>
+      <textarea id="cfgTags" rows="2"></textarea>
+
+      <button type="button" class="primary-submit" id="btnSaveSettings">💾 บันทึกการตั้งค่า</button>
+    </div>
+  </div>
+
+  <script>
+    var selectedIcon = '🪷';
+    var state = {
+      config: {
+        mainTitle: 'บริษัท บะจั๊ยบะโจ้ย จำกัด',
+        subTitle: 'บ่อจระเข้ลูกป๋าแจมหลังบริษัท • คนเพี้ยนรวมตัว',
+        hqName: 'บะจั๊ยบะโจ้ย HQ',
+        warnSign: '! ระวัง! บ่อจระเข้ลูกป๋าแจม (ห้ามโยนงานลงบ่อ)',
+        animal: '🐊',
+        tags: ['หน่วยโดนเทผู้เชี่ยวชาญ', 'ตัวตึงหลังบริษัท', 'สายอู้ระดับตำนาน', 'ผู้ประสบภัยวันจันทร์', 'เจ้าแม่ลอตเตอรี่']
+      },
+      krathongs: [
+        {
+          id: 'init-1',
+          name: 'ฮัดชิ่วปะป๊าน้องมีตัง',
+          tag: 'หน่วยโดนเทผู้เชี่ยวชาญ',
+          icon: '🎂',
+          wish: 'ขอให้ไม่โดนเทงานใส่ตอน 5 โมงเย็น!',
+          left: 50,
+          bottom: 84,
+          delay: '0s'
+        }
+      ]
+    };
+
+    try {
+      var saved = localStorage.getItem('krathong-pond-v1');
+      if (saved) state = JSON.parse(saved);
+    } catch (e) {}
+
+    function createLanterns() {
+      var box = document.getElementById('lanternLayer');
+      var positions = [15, 32, 55, 72, 86];
+      for (var i = 0; i < positions.length; i++) {
+        var l = document.createElement('div');
+        l.className = 'sky-lantern';
+        l.style.left = positions[i] + '%';
+        l.style.animationDuration = (9 + i * 2.2) + 's';
+        l.style.animationDelay = (i * 1.8) + 's';
+        box.appendChild(l);
+      }
+    }
+
+    function saveAndRender() {
+      try { localStorage.setItem('krathong-pond-v1', JSON.stringify(state)); } catch (e) {}
+      renderAll();
+    }
+
+    function renderAll() {
+      var c = state.config;
+      document.getElementById('uiMainTitle').textContent = c.mainTitle;
+      document.getElementById('uiSubTitle').textContent = c.subTitle;
+      document.getElementById('uiHqName').textContent = c.hqName;
+      document.getElementById('uiWarnSign').textContent = c.warnSign;
+      document.getElementById('pondAnimalIcon').textContent = c.animal || '🐊';
+      document.getElementById('croc1').textContent = c.animal || '🐊';
+      document.getElementById('croc2').textContent = c.animal || '🐊';
+
+      var chipsBox = document.getElementById('tagChips');
+      chipsBox.innerHTML = '';
+      (c.tags || []).forEach(function (t) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip';
+        btn.textContent = t;
+        btn.addEventListener('click', function () {
+          document.getElementById('inPlayerTag').value = t;
+        });
+        chipsBox.appendChild(btn);
+      });
+
+      var layer = document.getElementById('krathongLayer');
+      layer.innerHTML = '';
+      state.krathongs.forEach(function (item) {
+        var node = document.createElement('div');
+        node.className = 'krathong-node';
+        node.style.left = item.left + '%';
+        node.style.bottom = item.bottom + 'px';
+        node.style.animationDelay = item.delay || '0s';
+
+        var emojiDiv = document.createElement('div');
+        emojiDiv.className = 'k-emoji';
+        emojiDiv.textContent = item.icon;
+
+        var labelDiv = document.createElement('div');
+        labelDiv.className = 'k-label';
+        labelDiv.textContent = item.name + ' • ' + item.tag;
+
+        node.appendChild(emojiDiv);
+        node.appendChild(labelDiv);
+        node.addEventListener('click', function () {
+          showToast('💬 ' + item.name + ': "' + (item.wish || 'สาธุ ขอให้ปังๆ!') + '"');
+        });
+        layer.appendChild(node);
+      });
+
+      document.getElementById('krathongCount').textContent = state.krathongs.length;
+    }
+
+    function openModal(id) {
+      if (id === 'settingsModal') {
+        var c = state.config;
+        document.getElementById('cfgMainTitle').value = c.mainTitle;
+        document.getElementById('cfgSubTitle').value = c.subTitle;
+        document.getElementById('cfgHqName').value = c.hqName;
+        document.getElementById('cfgWarnSign').value = c.warnSign;
+        document.getElementById('cfgAnimal').value = c.animal;
+        document.getElementById('cfgTags').value = (c.tags || []).join(', ');
+      }
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function launchFirework() {
+      var colors = ['#facc15', '#38bdf8', '#f472b6', '#4ade80', '#c084fc', '#fb923c'];
+      for (var burst = 0; burst < 2; burst++) {
+        var cx = window.innerWidth * (0.25 + Math.random() * 0.5);
+        var cy = window.innerHeight * (0.16 + Math.random() * 0.24);
+        for (var i = 0; i < 22; i++) {
+          var p = document.createElement('div');
+          p.className = 'firework-particle';
+          var angle = (Math.PI * 2 * i) / 22;
+          var dist = 45 + Math.random() * 65;
+          p.style.left = cx + 'px';
+          p.style.top = cy + 'px';
+          p.style.background = colors[(i + burst) % colors.length];
+          p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+          p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+          document.body.appendChild(p);
+          (function (el) {
+            setTimeout(function () { el.remove(); }, 1000);
+          })(p);
+        }
+      }
+    }
+
+    var toastTimer = null;
+    function showToast(msg) {
+      var old = document.querySelector('.toast');
+      if (old) old.remove();
+      clearTimeout(toastTimer);
+      var el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = msg;
+      document.body.appendChild(el);
+      toastTimer = setTimeout(function () { el.remove(); }, 2200);
+    }
+
+    // ผูกปุ่มกดทั้งหมด
+    document.getElementById('btnFirework').addEventListener('click', launchFirework);
+    document.getElementById('btnOpenSettings').addEventListener('click', function () { openModal('settingsModal'); });
+    document.getElementById('btnHq').addEventListener('click', function () { openModal('settingsModal'); });
+    document.getElementById('uiWarnSign').addEventListener('click', function () { openModal('settingsModal'); });
+    document.getElementById('btnOpenFloat').addEventListener('click', function () { openModal('floatModal'); });
+    document.getElementById('btnCloseFloat').addEventListener('click', function () { closeModal('floatModal'); });
+    document.getElementById('btnCloseSettings').addEventListener('click', function () { closeModal('settingsModal'); });
+
+    document.getElementById('croc1').addEventListener('click', function () {
+      showToast('🐊 งับ! ห้ามโยนงานลงบ่อนะ');
+    });
+    document.getElementById('croc2').addEventListener('click', function () {
+      showToast('🐊 ป๋าแจมเฝ้าบ่ออยู่จ้า');
+    });
+
+    document.querySelectorAll('.k-choice').forEach(function (el) {
+      el.addEventListener('click', function () {
+        document.querySelectorAll('.k-choice').forEach(function (x) { x.classList.remove('active'); });
+        el.classList.add('active');
+        selectedIcon = el.getAttribute('data-icon');
+      });
+    });
+
+    document.getElementById('btnSubmitKrathong').addEventListener('click', function () {
+      var name = document.getElementById('inPlayerName').value.trim() || 'คนเพี้ยนนิรนาม';
+      var tag = document.getElementById('inPlayerTag').value.trim() || 'ชาวบ่อลูกป๋าแจม';
+      var wish = document.getElementById('inWish').value.trim() || 'ขอให้รวยๆ เฮงๆ สาธุ!';
+
+      var newItem = {
+        id: String(Date.now()),
+        name: name,
+        tag: tag,
+        icon: selectedIcon,
+        wish: wish,
+        left: Math.floor(32 + Math.random() * 36),
+        bottom: Math.floor(76 + Math.random() * 140),
+        delay: '-' + (Math.random() * 5).toFixed(1) + 's'
+      };
+
+      state.krathongs.push(newItem);
+      if (state.krathongs.length > 8) state.krathongs.shift();
+      document.getElementById('uiBanner').textContent =
+        'คุณ' + name + ' ลอยกระทงลงบ่อลูกป๋าแจมแล้ว! ' + state.config.animal + '✨';
+
+      saveAndRender();
+      closeModal('floatModal');
+      launchFirework();
+    });
+
+    document.getElementById('btnSaveSettings').addEventListener('click', function () {
+      state.config = {
+        mainTitle: document.getElementById('cfgMainTitle').value.trim() || 'บริษัท บะจั๊ยบะโจ้ย จำกัด',
+        subTitle: document.getElementById('cfgSubTitle').value.trim() || 'บ่อจระเข้ลูกป๋าแจมหลังบริษัท • คนเพี้ยนรวมตัว',
+        hqName: document.getElementById('cfgHqName').value.trim() || 'บะจั๊ยบะโจ้ย HQ',
+        warnSign: document.getElementById('cfgWarnSign').value.trim() || '! ระวัง! บ่อจระเข้ลูกป๋าแจม',
+        animal: document.getElementById('cfgAnimal').value.trim() || '🐊',
+        tags: document.getElementById('cfgTags').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean)
+      };
+      saveAndRender();
+      closeModal('settingsModal');
+      showToast('✅ บันทึกข้อมูลบ่อเรียบร้อย!');
+    });
+
+    createLanterns();
+    renderAll();
+  </script>
+</body>
+</html>
